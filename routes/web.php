@@ -11,6 +11,6 @@
 |
 */
 
-Route::put('/', function () {
-    return "die";
+Route::get('/users', function () {
+    return view('welcome');
 });

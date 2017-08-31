@@ -21,9 +21,11 @@ Route::post('refresh','LoginController@refresh');
 
 Route::middleware('auth:api')->group(function() {
 
-	Route::get('user',function(Request $request){
-		return $request->user();
-	});
+	Route::get('profile','ProfileController@index');
+
+	Route::post('profile/store','ProfileController@store');
+
+	Route::post('profile/update/{id}','ProfileController@update');
     
 	Route::post('logout','LoginController@logout');
 });
