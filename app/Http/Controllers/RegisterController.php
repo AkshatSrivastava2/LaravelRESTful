@@ -11,13 +11,16 @@ class RegisterController extends Controller
 {
 	private $client;
 
-	public function __construct()
-	{
-		$this->client=Client::find(2);
-	}
+    //function to retrieve the client credentials
+    public function getClient($client_id)
+    {
+        //dynamically retrieving the client_id and secret
+        $this->client=Client::find($client_id);
+    }
 
     public function register(Request $request)
     {
+        //validating the input request
     	$this->validate($request,[
 
     		'name'=>'required',
@@ -26,12 +29,17 @@ class RegisterController extends Controller
 
     	]);
 
+        //dynamically retrieving of the clients
+        $this->getClient(request('client_id'));
+        
+        // creating the new user
     	$user = User::create([
     		'name'=>request('name'),
     		'email'=>request('email'),
     		'password'=>bcrypt('password'),
     	]);
 
+        //creating the password grant type access token
     	$params=[
     		'grant_type'=>'password',
     		'client_id'=>$this->client->id,
@@ -43,8 +51,10 @@ class RegisterController extends Controller
 
     	$request->request->add($params);
 
+        //creating a route for dispatching the token
     	$proxy=Request::create('oauth/token','POST');
 
+        //dispatching the route request
     	return Route::dispatch($proxy);
 
     	//dd($request->all());

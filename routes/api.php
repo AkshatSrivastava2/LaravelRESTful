@@ -21,9 +21,15 @@ Route::post('refresh','LoginController@refresh');
 
 Route::middleware('auth:api')->group(function() {
 
-	Route::get('user',function(Request $request){
-		return $request->user();
-	});
+	Route::get('profile/{credentials}','ProfileController@index');
+
+	Route::post('profile/store','ProfileController@store');
+
+	Route::get('profile/{id}/edit','ProfileController@edit');
+
+	Route::post('profile/{id}/update','ProfileController@update');
+
+	Route::get('profile/{id}/delete','ProfileController@destroy');
     
 	Route::post('logout','LoginController@logout');
 });
