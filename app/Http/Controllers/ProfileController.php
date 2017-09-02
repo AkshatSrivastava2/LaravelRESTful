@@ -38,6 +38,8 @@ class ProfileController extends Controller
             //retrieving the data of the data received 
             $data=$response->getBody();
 
+            $data=json_decode($data,true);
+
             //returning the data with status code 200
             return response()->json(['message'=>$data],200)->header('Content-Type','application/json');
         }
