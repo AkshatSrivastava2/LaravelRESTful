@@ -19,15 +19,15 @@ class CreateProfilesTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('headline');
-            // $table->string('address_name');
-            // $table->string('address_code');
-            // $table->string('profile_url');
-            // $table->string('company_name');
-            // $table->string('company_address');
-            // $table->string('job_title');
-            // $table->string('publicProfileUrl');
-            // $table->string('summary');
-            // $table->rememberToken();
+            $table->string('address_name');
+            $table->string('address_code');
+            $table->string('profile_url');
+            $table->string('company_name');
+            $table->string('company_address');
+            $table->string('job_title');
+            $table->string('publicProfileUrl');
+            $table->string('summary');
+            $table->rememberToken();
             $table->timestamps();
         });
     }
