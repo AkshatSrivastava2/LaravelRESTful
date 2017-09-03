@@ -4,17 +4,66 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Profile;
+use App\Company;
 
 class ProfileController extends Controller
 {
     //
+    private $profile;
+
+    public function setProfile($request)
+    {
+        //creating a new instance of Profile type
+        $this->profile=new Profile;
+
+        //saving the details into the database
+        $this->profile->email=$request['email'];
+
+        $this->profile->name=$request['name'];
+
+        $this->profile->mobile=$request['mobile'];
+
+        $this->profile->headline=$request['headline'];
+
+        $this->profile->profile_url=$request['profile_url'];
+
+        $this->profile->job_title=$request['job_title'];
+
+        $this->profile->publicProfileUrl=$request['publicProfileUrl'];
+
+        $this->profile->summary=$request['summary'];
+
+        $this->profile->user_id=\Auth::user()->id;
+    }
+
+    public function setCompany($request)
+    {
+        for($i=0;$i<count($request);$i++)
+        {
+            $company=new Company;
+
+            $company->company_name=$request[$i]['name'];
+
+            $company->company_address=$request[$i]['address'];
+
+            $company->title=$request[$i]['title'];
+
+            $company->started_on=$request[$i]['start'];
+
+            $company->ended_on=$request[$i]['end'];
+
+            $company->user_id=\Auth::user()->id;
+
+            if(!$company->save())
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 
     public function index($credentials)
     {
-        
-        //Saving the credentials into the database
-
-
         //retrieving the data from linkedIn
         $client=new \GuzzleHttp\Client;
 
@@ -61,27 +110,13 @@ class ProfileController extends Controller
 
         $request=json_decode($data,true);
 
-        //creating a new instance of Profile type
-        $profile=new Profile;
+        $this->setProfile($request);
 
-        //saving the details into the database
-        $profile->email=$request['email'];
+        $companyResponse=$this->setCompany($request['values'][0]['company']);
 
-        $profile->name=$request['name'];
+        dd("Stop");
 
-        $profile->headline=$request['headline'];
-
-        $profile->profile_url=$request['profile_url'];
-
-        $profile->job_title=$request['job_title'];
-
-        $profile->publicProfileUrl=$request['publicProfileUrl'];
-
-        $profile->summary=$request['summary'];
-
-        $profile->user_id=\Auth::user()->id;
-
-        if($profile->save())
+        if($this->profile->save()&&$companyResponse)
         {
             //returning the saved successfully message with status code 201
             return response()->json(['message'=>'Saved Successfully'],201)->header('Content-Type','application/json');
@@ -96,26 +131,29 @@ class ProfileController extends Controller
     public function edit($id)
     {
         //retrieving the data corresponding to the id
-        $profile=Profile::find($id);
+        $this->profile=Profile::find($id);
 
-        if($profile==null)
+        if($this->profile==null)
         {
             //returning the no data found message with status code 404
             return response()->json(['message'=>'No Data Found'],404)->header('Content-Type','application/json');
         }
         else
         {
+            $company=Company::all()
+                        ->where('user_id',$this->profile->user_id);
+
             //returning the profile details with status code 200
-            return response()->json(['message'=>$profile],200)->header('Content-Type','application/json');
+            return response()->json(['message'=>$this->profile,'company'=>$company],200)->header('Content-Type','application/json');
         }
     }
 
     public function update(Request $request,$id)
     {
         //retrieving the data corresponding to id
-        $profile=Profile::find($id);
+        $this->profile=Profile::find($id);
 
-        if($profile==null)
+        if($this->profile==null)
         {
             return response()->json(['message'=>'No data found'],404)->header('Content-Type','application/json');
         }
@@ -128,33 +166,20 @@ class ProfileController extends Controller
             return response()->json(['message'=>'Duplicate email address'],409)->header('Content-Type','application/json');
         }
 
-        if(\Auth::user()->id!=$profile->user_id)
+        if(\Auth::user()->id!=$this->profile->user_id)
         {
             return response()->json(['message'=>'Unauthorised'],401)->header('Content-Type','application/json');
         }
 
         $data=$request->getContent();
 
-        $request=json_decode($data,true);
+        $this->setProfile($request);
 
-        //saving the details into the database
-        $profile->email=$request['email'];
+        $companyResponse=$this->setCompany($request['values'][0]['company']);
 
-        $profile->name=$request['name'];
-
-        $profile->headline=$request['headline'];
-
-        $profile->profile_url=$request['profile_url'];
-
-        $profile->job_title=$request['job_title'];
-
-        $profile->publicProfileUrl=$request['publicProfileUrl'];
-
-        $profile->summary=$request['summary'];
-
-
-        if($profile->save())
+        if($this->profile->save()&&$companyResponse)
         {
+
             //returning updated successfully message with status code 200
             return response()->json(['message'=>'Updated Successfully'],200)->header('Content-Type','application/json');
         }
@@ -168,16 +193,16 @@ class ProfileController extends Controller
     public function destroy($id)
     {
         //retrieving the data corresponding to id
-        $profile=Profile::find($id);
+        $this->profile=Profile::find($id);
 
-        if($profile==null)
+        if($this->profile==null)
         {
             //returning the no data found message with status code 404
             return response()->json(['message'=>'No data found'],404)->header('Content-Type','application/json');
         }
         else
         {
-            if($profile->delete())
+            if($this->profile->delete())
             {
                 //returning successfully deleted message with status code 200
                 return response()->json(['message'=>'Successfully Deleted'],200)->header('Content-Type','application/json');

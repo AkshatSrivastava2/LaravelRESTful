@@ -18,7 +18,7 @@ class CreateCompaniesTable extends Migration
             $table->increments('id');
             $table->string('company_name');
             $table->string('company_address');
-            $table->integer('profile_id');
+            $table->integer('user_id');
             $table->date('started_on');
             $table->date('ended_on');
             $table->string('title');
