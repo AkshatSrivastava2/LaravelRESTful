@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Education extends Model
 {
     //
-    protected $table='addresses';
+    protected $table='educations';
 
     protected $fillable=['qualification','yearOfPassing','percentage','address_name','user_id'];
 

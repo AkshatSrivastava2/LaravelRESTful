@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Profile;
 use App\Company;
+use App\Education;
 
 class ProfileController extends Controller
 {
@@ -52,7 +53,7 @@ class ProfileController extends Controller
 
             $company->ended_on=$request[$i]['end'];
 
-            $company->user_id=\Auth::user()->id;
+            $company->user_id=$this->profile->user_id;
 
             if(!$company->save())
             {
@@ -61,6 +62,31 @@ class ProfileController extends Controller
         }
         return true;
     }
+
+    public function setEducation($request)
+    {
+        for($i=0;$i<count($request);$i++)
+        {
+            $education=new Education;
+
+            $education->address_name=$request[$i]['address'];
+
+            $education->qualification=$request[$i]['qualification'];
+
+            $education->yearOfPassing=$request[$i]['yearOfPassing'];
+
+            $education->percentage=$request[$i]['percentage'];
+
+            $education->user_id=$this->profile->user_id;
+
+            if(!$education->save())
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     public function index($credentials)
     {
@@ -98,12 +124,20 @@ class ProfileController extends Controller
 
     public function store(Request $request)
     {        
-        //checking for duplicate email_id
-        $emailExist=Profile::all()->where('email',$request->email);
+        //checking for duplicate email_id and user id
+        $emailExist=Profile::all()
+                        ->where('email',$request->email);
+
+        $userIdExist=Profile::all() ->where('user_id',\Auth::user()->id);
 
         if(!$emailExist->isEmpty())
         {
             return response()->json(['message'=>'Duplicate email address'],200)->header('Content-Type','application/json');
+        }
+
+        if(!$userIdExist->isEmpty())
+        {
+            return response()->json(['message'=>'Duplicate User ID'],200)->header('Content-Type','application/json');
         }
 
         $data=$request->getContent();
@@ -114,9 +148,9 @@ class ProfileController extends Controller
 
         $companyResponse=$this->setCompany($request['values'][0]['company']);
 
-        dd("Stop");
+        $educationResponse=$this->setEducation($request['values'][1]['qualifications']);
 
-        if($this->profile->save()&&$companyResponse)
+        if($this->profile->save()&&$companyResponse&&$educationResponse)
         {
             //returning the saved successfully message with status code 201
             return response()->json(['message'=>'Saved Successfully'],201)->header('Content-Type','application/json');
@@ -141,10 +175,13 @@ class ProfileController extends Controller
         else
         {
             $company=Company::all()
-                        ->where('user_id',$this->profile->user_id);
+                     ->where('user_id',$this->profile->user_id);
+
+            $education=Education::all()
+                     ->where('user_id',$this->profile->user_id);
 
             //returning the profile details with status code 200
-            return response()->json(['message'=>$this->profile,'company'=>$company],200)->header('Content-Type','application/json');
+            return response()->json(['message'=>$this->profile,'company'=>$company,'education'=>$education],200)->header('Content-Type','application/json');
         }
     }
 
@@ -177,7 +214,9 @@ class ProfileController extends Controller
 
         $companyResponse=$this->setCompany($request['values'][0]['company']);
 
-        if($this->profile->save()&&$companyResponse)
+        $educationResponse=$this->setEducation($request['values'][1]['qualifications']);
+
+        if($this->profile->save()&&$companyResponse&&$educationResponse)
         {
 
             //returning updated successfully message with status code 200

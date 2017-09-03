@@ -24,7 +24,7 @@ class CreateProfilesTable extends Migration
             $table->string('job_title');
             $table->string('publicProfileUrl');
             $table->string('summary');
-            $table->integer('user_id');
+            $table->integer('user_id')->unique();
             $table->rememberToken();
             $table->timestamps();
         });
