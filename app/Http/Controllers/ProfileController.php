@@ -8,6 +8,7 @@ use App\Profile;
 class ProfileController extends Controller
 {
     //
+
     public function index($credentials)
     {
         
@@ -47,10 +48,7 @@ class ProfileController extends Controller
     }
 
     public function store(Request $request)
-    {
-        //creating a new instance of Profile type
-        $profile=new Profile;
-
+    {        
         //checking for duplicate email_id
         $emailExist=Profile::all()->where('email',$request->email);
 
@@ -59,44 +57,29 @@ class ProfileController extends Controller
             return response()->json(['message'=>'Duplicate email address'],200)->header('Content-Type','application/json');
         }
 
+        $data=$request->getContent();
+
+        $request=json_decode($data,true);
+
+        //creating a new instance of Profile type
+        $profile=new Profile;
+
         //saving the details into the database
-        $profile->email=$request->email;
+        $profile->email=$request['email'];
 
-        $profile->name=$request->name;
+        $profile->name=$request['name'];
 
-        $profile->headline=$request->headline;
+        $profile->headline=$request['headline'];
 
-        $profile->address_name="asd";
+        $profile->profile_url=$request['profile_url'];
 
-        $profile->address_code="asd";
+        $profile->job_title=$request['job_title'];
 
-        $profile->profile_url="asd";
+        $profile->publicProfileUrl=$request['publicProfileUrl'];
 
-        $profile->company_name="asd";
+        $profile->summary=$request['summary'];
 
-        $profile->company_address="asd";
-
-        $profile->job_title="asas";
-
-        $profile->publicProfileUrl="asas";
-
-        $profile->summary="asas";
-
-        // $profile->address_name=$request->address_name;
-
-        // $profile->address_code=$request->address_code;
-
-        // $profile->profile_url=$request->profile_url;
-
-        // $profile->company_name=$request->company_name;
-
-        // $profile->company_address=$request->company_address;
-
-        // $profile->job_title=$request->job_title;
-
-        // $profile->publicProfileUrl=$request->publicProfileUrl;
-
-        // $profile->summary=$request->summary;
+        $profile->user_id=\Auth::user()->id;
 
         if($profile->save())
         {
@@ -132,6 +115,11 @@ class ProfileController extends Controller
         //retrieving the data corresponding to id
         $profile=Profile::find($id);
 
+        if($profile==null)
+        {
+            return response()->json(['message'=>'No data found'],404)->header('Content-Type','application/json');
+        }
+
         //checking for duplicate email_id
         $emailExist=Profile::all()->where('email',$request->email);
         
@@ -140,28 +128,30 @@ class ProfileController extends Controller
             return response()->json(['message'=>'Duplicate email address'],409)->header('Content-Type','application/json');
         }
 
-        //updating the profile_url
-        $profile->email=$request->email;
+        if(\Auth::user()->id!=$profile->user_id)
+        {
+            return response()->json(['message'=>'Unauthorised'],401)->header('Content-Type','application/json');
+        }
 
-        $profile->name=$request->name;
+        $data=$request->getContent();
 
-        $profile->headline=$request->headline;
+        $request=json_decode($data,true);
 
-        $profile->address_name="asd";
+        //saving the details into the database
+        $profile->email=$request['email'];
 
-        $profile->address_code="asd";
+        $profile->name=$request['name'];
 
-        $profile->profile_url="asd";
+        $profile->headline=$request['headline'];
 
-        $profile->company_name="asd";
+        $profile->profile_url=$request['profile_url'];
 
-        $profile->company_address="asd";
+        $profile->job_title=$request['job_title'];
 
-        $profile->job_title="asas";
+        $profile->publicProfileUrl=$request['publicProfileUrl'];
 
-        $profile->publicProfileUrl="asas";
+        $profile->summary=$request['summary'];
 
-        $profile->summary="asas";
 
         if($profile->save())
         {

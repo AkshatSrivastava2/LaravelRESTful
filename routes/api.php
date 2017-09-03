@@ -32,4 +32,9 @@ Route::middleware('auth:api')->group(function() {
 	Route::get('profile/{id}/delete','ProfileController@destroy');
     
 	Route::post('logout','LoginController@logout');
+
+	Route::get('user',function(Request $request){
+		$profile=App\Profile::find(1);
+		return $profile->address->address_name;
+	});
 });
