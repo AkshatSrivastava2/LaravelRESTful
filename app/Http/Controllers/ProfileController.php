@@ -288,6 +288,19 @@ class ProfileController extends Controller
             if($this->profile->delete())
             {
                 //returning successfully deleted message with status code 200
+                $company=Company::all()->where('user_id',$this->profile->user_id);
+
+                for($i=0;$i<$company->count();$i++)
+                {
+                    $company[$i]->delete();
+                }
+
+                $education=Education::all()->where('user_id',$this->profile->user_id);
+
+                for($i=0;$i<$education->count();$i++)
+                {
+                    $education[$i]->delete();
+                }
                 return response()->json(['message'=>'Successfully Deleted'],200)->header('Content-Type','application/json');
             }
             else
