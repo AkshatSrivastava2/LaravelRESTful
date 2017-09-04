@@ -242,7 +242,25 @@ class ProfileController extends Controller
 
         $profileResponse=$this->updateProfile($this->profile,$request);
 
-        if($profileResponse)
+        $company=Company::all()->where('user_id',$this->profile->user_id);
+
+        for($i=0;$i<$company->count();$i++)
+        {
+            $company[$i]->delete();
+        }
+
+        $education=Education::all()->where('user_id',$this->profile->user_id);
+
+        for($i=0;$i<$education->count();$i++)
+        {
+            $education[$i]->delete();
+        }
+
+        $companyResponse=$this->setCompany($request['values'][0]['company']);
+
+        $educationResponse=$this->setEducation($request['values'][1]['qualifications']);
+
+        if($profileResponse&&$companyResponse&&$educationResponse)
         {
 
             //returning updated successfully message with status code 200
