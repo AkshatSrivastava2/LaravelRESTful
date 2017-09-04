@@ -12,6 +12,28 @@ class ProfileController extends Controller
     //
     private $profile;
 
+    public function updateProfile($updateProfile,$request)
+    {
+        //function to update profile
+        $updateProfile->email=$request['email'];
+
+        $updateProfile->name=$request['name'];
+
+        $updateProfile->mobile=$request['mobile'];
+
+        $updateProfile->headline=$request['headline'];
+
+        $updateProfile->profile_url=$request['profile_url'];
+
+        $updateProfile->job_title=$request['job_title'];
+
+        $updateProfile->publicProfileUrl=$request['publicProfileUrl'];
+
+        $updateProfile->summary=$request['summary'];
+
+        return $updateProfile->save();
+    }
+
     public function setProfile($request)
     {
         //creating a new instance of Profile type
@@ -41,8 +63,10 @@ class ProfileController extends Controller
     {
         for($i=0;$i<count($request);$i++)
         {
+            //creating new instance of company
             $company=new Company;
 
+            //storing the data into the company credentials
             $company->company_name=$request[$i]['name'];
 
             $company->company_address=$request[$i]['address'];
@@ -67,8 +91,10 @@ class ProfileController extends Controller
     {
         for($i=0;$i<count($request);$i++)
         {
+            //creating new instance of education
             $education=new Education;
 
+            //set the values of education
             $education->address_name=$request[$i]['address'];
 
             $education->qualification=$request[$i]['qualification'];
@@ -144,6 +170,8 @@ class ProfileController extends Controller
 
         $request=json_decode($data,true);
 
+        //setting up profile,education and company details
+
         $this->setProfile($request);
 
         $companyResponse=$this->setCompany($request['values'][0]['company']);
@@ -210,13 +238,11 @@ class ProfileController extends Controller
 
         $data=$request->getContent();
 
-        $this->setProfile($request);
+        $request=json_decode($data,true);
 
-        $companyResponse=$this->setCompany($request['values'][0]['company']);
+        $profileResponse=$this->updateProfile($this->profile,$request);
 
-        $educationResponse=$this->setEducation($request['values'][1]['qualifications']);
-
-        if($this->profile->save()&&$companyResponse&&$educationResponse)
+        if($profileResponse)
         {
 
             //returning updated successfully message with status code 200
