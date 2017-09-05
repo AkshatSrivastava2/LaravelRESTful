@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Route;
 use Laravel\Passport\Client;
+use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
@@ -36,7 +37,7 @@ class RegisterController extends Controller
     	$user = User::create([
     		'name'=>request('name'),
     		'email'=>request('email'),
-    		'password'=>bcrypt('password'),
+    		'password'=>Hash::make($request->password),
     	]);
 
         //creating the password grant type access token

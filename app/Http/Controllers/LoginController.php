@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Laravel\Passport\Client;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -27,6 +29,18 @@ class LoginController extends Controller
     		'username'=>'required',
     		'password'=>'required',
     	]);
+
+        $user=User::all()->where('email',request('username'));
+
+        if($user->count()==0)
+        {
+            return response()->json(['message'=>'No Such User Exist'],401);
+        }
+
+        $hashedPassword=Hash::make(request('password'));
+
+        if(!Hash::check(request('password'),$hashedPassword))
+            return response()->json(['message'=>'No Such User Exist'],401);
 
         //adding the parameter for password grant type request
     	$params=[

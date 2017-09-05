@@ -151,6 +151,7 @@ class ProfileController extends Controller
     public function store(Request $request)
     {        
         //checking for duplicate email_id and user id
+
         $emailExist=Profile::all()
                         ->where('email',$request->email);
 
