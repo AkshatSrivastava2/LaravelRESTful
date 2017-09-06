@@ -37,7 +37,7 @@ class LoginController extends Controller
             return response()->json(['message'=>'No Such User Exist'],401);
         }
 
-        $hashedPassword=Hash::make(request('password'));
+        $hashedPassword=$user[0]->password;
 
         if(!Hash::check(request('password'),$hashedPassword))
             return response()->json(['message'=>'No Such User Exist'],401);
