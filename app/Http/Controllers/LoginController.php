@@ -40,7 +40,7 @@ class LoginController extends Controller
         $hashedPassword=$user[0]->password;
 
         if(!Hash::check(request('password'),$hashedPassword))
-            return response()->json(['message'=>'No Such User Exist'],401);
+            return response()->json(['message'=>'No Such Password Exist'],401);
 
         //adding the parameter for password grant type request
     	$params=[
