@@ -15,19 +15,14 @@ class ProfileController extends Controller
     public function updateProfile($updateProfile,$request)
     {
         //function to update profile
-        $updateProfile->email=$request['email'];
+        
+        $updateProfile->headline=$request['currentlyWorkingAt'];
 
-        $updateProfile->name=$request['name'];
+        $updateProfile->profile_url=$request['profileImageUrl'];
 
-        $updateProfile->mobile=$request['mobile'];
+        $updateProfile->job_title=$request['currentlyWorkingAs'];
 
-        $updateProfile->headline=$request['headline'];
-
-        $updateProfile->profile_url=$request['profile_url'];
-
-        $updateProfile->job_title=$request['job_title'];
-
-        $updateProfile->publicProfileUrl=$request['publicProfileUrl'];
+        $updateProfile->publicProfileUrl=$request['profileUrl'];
 
         $updateProfile->summary=$request['summary'];
 
@@ -40,19 +35,14 @@ class ProfileController extends Controller
         $this->profile=new Profile;
 
         //saving the details into the database
-        $this->profile->email=$request['email'];
+        
+        $this->profile->headline=$request['currentlyWorkingAt'];
 
-        $this->profile->name=$request['name'];
+        $this->profile->profile_url=$request['profileImageUrl'];
 
-        $this->profile->mobile=$request['mobile'];
+        $this->profile->job_title=$request['currentlyWorkingAs'];
 
-        $this->profile->headline=$request['headline'];
-
-        $this->profile->profile_url=$request['profile_url'];
-
-        $this->profile->job_title=$request['job_title'];
-
-        $this->profile->publicProfileUrl=$request['publicProfileUrl'];
+        $this->profile->publicProfileUrl=$request['profileUrl'];
 
         $this->profile->summary=$request['summary'];
 

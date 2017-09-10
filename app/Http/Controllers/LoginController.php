@@ -92,7 +92,7 @@ class LoginController extends Controller
     	$accessToken=Auth::user()->token();
 
         //revoking the token 
-    	DB::table('oauth_refresh_tokens')->where('access_token_id',$accessToken)->update(['revoked'=>true]);
+    	//DB::table('oauth_refresh_tokens')->where('access_token_id',$accessToken)->update(['revoked'=>true]);
 
     	$accessToken->revoke();
 
