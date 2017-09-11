@@ -197,8 +197,10 @@ class ProfileController extends Controller
             $education=Education::all()
                      ->where('user_id',$this->profile->user_id);
 
+            $basic=User::all()->where('id',$this->profile->user_id);
+
             //returning the profile details with status code 200
-            return response()->json(['message'=>$this->profile,'company'=>$company,'education'=>$education],200)->header('Content-Type','application/json');
+            return response()->json(['message'=>$this->profile,'basic'=>$basic,'company'=>$company,'education'=>$education],200)->header('Content-Type','application/json');
         }
     }
 
