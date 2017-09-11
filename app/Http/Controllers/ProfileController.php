@@ -142,15 +142,13 @@ class ProfileController extends Controller
     {        
         //checking for duplicate email_id and user id
 
-        $emailExist=Profile::all()
-                        ->where('email',$request->email);
-
+        // $emailExist=Profile::all()
+        //                 ->where('email',$request->email);
+        // if(!$emailExist->isEmpty())
+        // {
+        //     return response()->json(['message'=>'Duplicate email address'],200)->header('Content-Type','application/json');
+        // }
         $userIdExist=Profile::all() ->where('user_id',\Auth::user()->id);
-
-        if(!$emailExist->isEmpty())
-        {
-            return response()->json(['message'=>'Duplicate email address'],200)->header('Content-Type','application/json');
-        }
 
         if(!$userIdExist->isEmpty())
         {
@@ -215,12 +213,12 @@ class ProfileController extends Controller
         }
 
         //checking for duplicate email_id
-        $emailExist=Profile::all()->where('email',$request->email);
+        // $emailExist=Profile::all()->where('email',$request->email);
         
-        if(!$emailExist->isEmpty())
-        {
-            return response()->json(['message'=>'Duplicate email address'],409)->header('Content-Type','application/json');
-        }
+        // if(!$emailExist->isEmpty())
+        // {
+        //     return response()->json(['message'=>'Duplicate email address'],409)->header('Content-Type','application/json');
+        // }
 
         if(\Auth::user()->id!=$this->profile->user_id)
         {
