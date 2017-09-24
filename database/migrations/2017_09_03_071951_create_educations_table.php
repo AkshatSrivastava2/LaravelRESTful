@@ -15,12 +15,13 @@ class CreateEducationsTable extends Migration
     {
         //
         Schema::create('educations', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('address_name');
             $table->string('qualification');
             $table->string('yearOfPassing');
             $table->double('percentage',4,2);
-            $table->integer('user_id');
+            $table->integer('user_id')->unsigned();
             $table->timestamps();
             
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

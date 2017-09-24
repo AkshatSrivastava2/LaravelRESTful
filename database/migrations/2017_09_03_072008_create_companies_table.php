@@ -15,10 +15,11 @@ class CreateCompaniesTable extends Migration
     {
         //
         Schema::create('companies', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('company_name');
             $table->string('company_address');
-            $table->integer('user_id');
+            $table->integer('user_id')->unsigned();
             $table->date('started_on');
             $table->date('ended_on');
             $table->string('title');

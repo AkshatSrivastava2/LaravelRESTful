@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateProfilesTable extends Migration
+class CreateLinkedinProfilesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,13 +15,14 @@ class CreateProfilesTable extends Migration
     {
         //
         Schema::create('linkedin_profiles', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('currentlyWorkingAt');
             $table->string('profileImageUrl');
             $table->string('currentlyWorkingAs');
             $table->string('profileUrl');
             $table->string('summary');
-            $table->integer('user_id')->unique();
+            $table->integer('user_id')->unsigned();
             $table->rememberToken();
             $table->timestamps();
 
