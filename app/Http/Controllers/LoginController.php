@@ -97,7 +97,7 @@ class LoginController extends Controller
     	$accessToken->revoke();
 
         //returning the response 
-    	return response()->json([],204);
+    	return response()->json(['message'=>'Logged Out'],200);
     }
 
 }
