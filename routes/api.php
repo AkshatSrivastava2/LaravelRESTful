@@ -32,4 +32,8 @@ Route::middleware('auth:api')->group(function() {
 	Route::get('profile/{id}/delete','ProfileController@destroy');
     
 	Route::post('logout','LoginController@logout');
+
 });
+Route::get('user/linkedin', 'ProfileController@makeRequest');
+
+Route::get('oauth2/linkedin','ProfileController@getRequest');

@@ -16,13 +16,13 @@ class ProfileController extends Controller
     {
         //function to update profile
         
-        $updateProfile->headline=$request['currentlyWorkingAt'];
+        $updateProfile->currentlyWorkingAt=$request['currentlyWorkingAt'];
 
-        $updateProfile->profile_url=$request['profileImageUrl'];
+        $updateProfile->profileImageUrl=$request['profileImageUrl'];
 
-        $updateProfile->job_title=$request['currentlyWorkingAs'];
+        $updateProfile->currentlyWorkingAs=$request['currentlyWorkingAs'];
 
-        $updateProfile->publicProfileUrl=$request['profileUrl'];
+        $updateProfile->profileUrl=$request['profileUrl'];
 
         $updateProfile->summary=$request['summary'];
 
@@ -36,13 +36,13 @@ class ProfileController extends Controller
 
         //saving the details into the database
         
-        $this->profile->headline=$request['currentlyWorkingAt'];
+        $this->profile->currentlyWorkingAt=$request['currentlyWorkingAt'];
 
-        $this->profile->profile_url=$request['profileImageUrl'];
+        $this->profile->profileImageUrl=$request['profileImageUrl'];
 
-        $this->profile->job_title=$request['currentlyWorkingAs'];
+        $this->profile->currentlyWorkingAs=$request['currentlyWorkingAs'];
 
-        $this->profile->publicProfileUrl=$request['profileUrl'];
+        $this->profile->profileUrl=$request['profileUrl'];
 
         $this->profile->summary=$request['summary'];
 
@@ -104,6 +104,45 @@ class ProfileController extends Controller
     }
 
 
+    public function makeRequest(Request $request)
+    {        
+        $query = http_build_query([
+            'client_id' => '819ki1ptazvjjl',
+            'redirect_uri' => 'http://localhost:8000/api/oauth2/linkedin',
+            'response_type' => 'code',
+            'state'=>'DCEeFWf45A53sdfKef424',
+
+        ]);
+
+        return redirect('https://www.linkedin.com/oauth/v2/authorization?' . $query);
+    }    
+    
+    public function getRequest(Request $request)
+    {
+        
+        $http = new \GuzzleHttp\Client;
+        $response = $http->post('https://www.linkedin.com/oauth/v2/accessToken', 
+            [
+                'form_params' => [
+                                    'grant_type' => 'authorization_code',
+                                    'client_id' => '819ki1ptazvjjl',
+                                    'client_secret' => 'z6s2aKqGzMg2mJGq',
+                                    'redirect_uri' => 'http://localhost:8000/api/oauth2/linkedin',
+                                    'code' => $request->code
+                                ]
+            ], 
+            [
+                'headers' =>[
+                                'Accept'     => 'application/json',
+                                'Content-Type' => 'application/x-www-form-urlencoded',
+                            ]
+            ]);
+
+        $body=$response->getBody();
+        dd(substr($body,17,179));
+    }
+
+
     public function index($credentials)
     {
         //retrieving the data from linkedIn
@@ -140,14 +179,7 @@ class ProfileController extends Controller
 
     public function store(Request $request)
     {        
-        //checking for duplicate email_id and user id
-
-        // $emailExist=Profile::all()
-        //                 ->where('email',$request->email);
-        // if(!$emailExist->isEmpty())
-        // {
-        //     return response()->json(['message'=>'Duplicate email address'],200)->header('Content-Type','application/json');
-        // }
+        
         $userIdExist=Profile::all() ->where('user_id',\Auth::user()->id);
 
         if(!$userIdExist->isEmpty())
@@ -156,6 +188,7 @@ class ProfileController extends Controller
         }
 
         $data=$request->getContent();
+        // dd($request);
 
         $request=json_decode($data,true);
 
@@ -213,14 +246,6 @@ class ProfileController extends Controller
         {
             return response()->json(['message'=>'No data found'],404)->header('Content-Type','application/json');
         }
-
-        //checking for duplicate email_id
-        // $emailExist=Profile::all()->where('email',$request->email);
-        
-        // if(!$emailExist->isEmpty())
-        // {
-        //     return response()->json(['message'=>'Duplicate email address'],409)->header('Content-Type','application/json');
-        // }
 
         if(\Auth::user()->id!=$this->profile->user_id)
         {
