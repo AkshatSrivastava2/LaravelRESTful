@@ -21,7 +21,7 @@ Route::post('refresh','LoginController@refresh');
 
 Route::middleware('auth:api')->group(function() {
 
-	Route::get('profile/{credentials}','ProfileController@index');
+	Route::get('profile','ProfileController@index');
 
 	Route::post('profile/store','ProfileController@store');
 
