@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Cache;
 use GuzzleHttp\Exception\ClientException;
 use App\Profile;
 use App\Company;
+use App\User;
 use App\Education;
 
 class ProfileController extends Controller
