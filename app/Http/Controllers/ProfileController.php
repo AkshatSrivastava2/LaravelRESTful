@@ -175,7 +175,7 @@ class ProfileController extends Controller
                 if($statusCode!=200)
                 {
                 //return the error message with status code 204
-                return response()->json(['message'=>'Could not retrieve data'],204)->header('Content-Type','application/json');
+                return response()->json(['message'=>'Could not retrieve data','code'=>'204'],204)->header('Content-Type','application/json');
                 }
                 else
                 {
@@ -185,7 +185,7 @@ class ProfileController extends Controller
                 $data=json_decode($data,true);
 
                 //returning the data with status code 200
-                return response()->json(['message'=>$data],200)->header('Content-Type','application/json');
+                return response()->json(['message'=>$data,'code'=>'200'],200)->header('Content-Type','application/json');
                 }
             }
             else
@@ -213,7 +213,7 @@ class ProfileController extends Controller
 
                 if(!$userIdExist->isEmpty())
                 {
-                    return response()->json(['message'=>'Duplicate User ID'],200)->header('Content-Type','application/json');
+                    return response()->json(['message'=>'Duplicate User ID','code'=>'404'],404)->header('Content-Type','application/json');
                 }
 
                 $data=$request->getContent();
@@ -232,12 +232,12 @@ class ProfileController extends Controller
                 if($this->profile->save()&&$companyResponse&&$educationResponse)
                 {
                     //returning the saved successfully message with status code 201
-                    return response()->json(['message'=>'Saved Successfully'],201)->header('Content-Type','application/json');
+                    return response()->json(['message'=>'Saved Successfully','code'=>'201'],201)->header('Content-Type','application/json');
                 }
                 else
                 {
                     //returning the error message with status code 403
-                    return response()->json(['message'=>'Could not save the data'],403)->header('Content-Type','application/json');
+                    return response()->json(['message'=>'Could not save the data','code'=>'403'],403)->header('Content-Type','application/json');
                 }
             }
             else
@@ -267,7 +267,7 @@ class ProfileController extends Controller
                 if($this->profile==null)
                 {
                     //returning the no data found message with status code 404
-                    return response()->json(['message'=>'No Data Found'],404)->header('Content-Type','application/json');
+                    return response()->json(['message'=>'No Data Found','code'=>'404'],404)->header('Content-Type','application/json');
                 }
                 else
                 {
@@ -309,12 +309,12 @@ class ProfileController extends Controller
 
                 if($this->profile==null)
                 {
-                    return response()->json(['message'=>'No data found'],404)->header('Content-Type','application/json');
+                    return response()->json(['message'=>'No data found','code'=>'404'],404)->header('Content-Type','application/json');
                 }
 
                 if(\Auth::user()->id!=$this->profile->user_id)
                 {
-                    return response()->json(['message'=>'Unauthorised'],401)->header('Content-Type','application/json');
+                    return response()->json(['message'=>'Unauthorised','code'=>'401'],401)->header('Content-Type','application/json');
                 }
 
                 $data=$request->getContent();
@@ -345,12 +345,12 @@ class ProfileController extends Controller
                 {
 
                     //returning updated successfully message with status code 200
-                    return response()->json(['message'=>'Updated Successfully'],200)->header('Content-Type','application/json');
+                    return response()->json(['message'=>'Updated Successfully','code'=>'200'],200)->header('Content-Type','application/json');
                 }
                 else
                 {
                     //returning error message with status code 403
-                    return response()->json(['message'=>'Could not retrieve data'],403)->header('Content-Type','application/json');
+                    return response()->json(['message'=>'Could not retrieve data','code'=>'403'],403)->header('Content-Type','application/json');
                 }
             }
             else
@@ -380,7 +380,7 @@ class ProfileController extends Controller
                 if($this->profile==null)
                 {
                     //returning the no data found message with status code 404
-                    return response()->json(['message'=>'No data found'],404)->header('Content-Type','application/json');
+                    return response()->json(['message'=>'No data found','code'=>'404'],404)->header('Content-Type','application/json');
                 }
                 else
                 {
@@ -400,12 +400,12 @@ class ProfileController extends Controller
                         {
                             $education[$i]->delete();
                         }
-                        return response()->json(['message'=>'Successfully Deleted'],200)->header('Content-Type','application/json');
+                        return response()->json(['message'=>'Successfully Deleted','code'=>'200'],200)->header('Content-Type','application/json');
                     }
                     else
                     {
                         //returning the error message with status code 403
-                        return response()->json(['message'=>'Could not retrieve data'],403)->header('Content-Type','application/json');
+                        return response()->json(['message'=>'Could not retrieve data','code'=>'403'],403)->header('Content-Type','application/json');
                     }
                 }
             }
