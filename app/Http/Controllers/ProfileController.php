@@ -107,7 +107,7 @@ class ProfileController extends Controller
     }
 
 
-    public function makeRequest(Request $request)
+    public function makeRequest()
     {        
         $query = http_build_query([
             'client_id' => '819ki1ptazvjjl',
@@ -154,6 +154,8 @@ class ProfileController extends Controller
     public function index()
     {
         //retrieving the data from linkedIn
+        $this->makeRequest();
+        
         try
         {
             if(Cache::has('linkedin_Oauth_token'))
