@@ -10,7 +10,7 @@ use App\Company;
 use App\User;
 use App\Education;
 
-class ProfileController extends Controller
+class LinkedInController extends Controller
 {
     //
     private $profile;
