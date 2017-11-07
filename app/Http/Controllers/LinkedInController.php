@@ -199,7 +199,7 @@ class LinkedInController extends Controller
             }
             else
             {
-                return response()->json(['error'=>'Unauthorised To Use LinkedIn Endpoints 1', 'code'=>'401'], 401);
+                return response()->json(['error'=>'Unauthorised To Use LinkedIn Endpoints', 'code'=>'401'], 401);
             }
 
         }
@@ -209,23 +209,24 @@ class LinkedInController extends Controller
             {
                 return $e->getResponse();
 
-                return response()->json(['error'=>'Unauthorised To Use LinkedIn Endpoints 2', 'code'=>'401'], 401);               
+                return response()->json(['error'=>'Unauthorised To Use LinkedIn Endpoints', 'code'=>'401'], 401);               
             }
         }           
     }
 
     public function store(Request $request)
-    {        
+    { 
+        
         try
         {
             if(Cache::has('linkedin_Oauth_token'))
             {
                 $userIdExist=Profile::all()->where('user_id',\Auth::user()->id);
 
-                if(!$userIdExist->isEmpty())
-                {
-                    return response()->json(['message'=>'Duplicate User ID','code'=>'404'],404)->header('Content-Type','application/json');
-                }
+                // if(!$userIdExist->isEmpty())
+                // {
+                //     return response()->json(['message'=>'Duplicate User ID','code'=>'404'],404)->header('Content-Type','application/json');
+                // }
 
                 $data=$request->getContent();
                 // dd($request);
