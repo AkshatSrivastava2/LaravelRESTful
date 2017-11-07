@@ -16,7 +16,7 @@ class RegisterController extends Controller
     public function getClient($client_id)
     {
         //dynamically retrieving the client_id and secret
-        $this->client=Client::find($client_id);
+        $this->client=Client::find(2);
     }
 
     public function register(Request $request)

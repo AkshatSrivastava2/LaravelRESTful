@@ -124,6 +124,7 @@ class LinkedInController extends Controller
     {
         
         $http = new \GuzzleHttp\Client;
+
         $response = $http->post('https://www.linkedin.com/oauth/v2/accessToken', 
             [
                 'form_params' => [
@@ -142,27 +143,31 @@ class LinkedInController extends Controller
             ]);
 
         $body=$response->getBody();
-        return $this->storeAccessTokenInCache(substr($body,17,179));
+
+        return $this->storeAccessTokenInCache(substr($body,17,350));
     }
 
     public function storeAccessTokenInCache($data)
     {   
         Cache::forever('linkedin_Oauth_token',$data);
+
         return response()->json(['message'=>'Success', 'code'=>'200', 'access_token'=>Cache::get('linkedin_Oauth_token')], '200');   
     }
 
     public function index()
-    {
-        //retrieving the data from linkedIn
-        $this->makeRequest();
-        
+    {        
+
         try
         {
+
             if(Cache::has('linkedin_Oauth_token'))
             {
+
                 $client=new \GuzzleHttp\Client;
 
                 $credentials=Cache::get('linkedin_Oauth_token');
+
+                // return $credentials;
 
                 $response=$client->request('GET','https://api.linkedin.com/v1/people/~:(id,num-connections,picture-url,location,headline,positions,email-address,summary,formatted-name,public-profile-url)?format=json',
                 [
@@ -170,6 +175,7 @@ class LinkedInController extends Controller
                         'Authorization'=>'Bearer '.$credentials,
                     ],
                 ]);
+                return $response;
 
                 //retrieving the status code of the data received
                 $statusCode=$response->getStatusCode();
@@ -193,7 +199,7 @@ class LinkedInController extends Controller
             }
             else
             {
-                return response()->json(['error'=>'Unauthorised To Use LinkedIn Endpoints', 'code'=>'401'], '401');
+                return response()->json(['error'=>'Unauthorised To Use LinkedIn Endpoints 1', 'code'=>'401'], 401);
             }
 
         }
@@ -201,7 +207,9 @@ class LinkedInController extends Controller
         {
             if($e->getResponse()->getStatusCode()==401)
             {
-                return response()->json(['error'=>'Unauthorised To Use LinkedIn Endpoints', 'code'=>'401'], '401');               
+                return $e->getResponse();
+
+                return response()->json(['error'=>'Unauthorised To Use LinkedIn Endpoints 2', 'code'=>'401'], 401);               
             }
         }           
     }
