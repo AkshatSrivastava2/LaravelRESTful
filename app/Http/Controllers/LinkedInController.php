@@ -237,9 +237,9 @@ class LinkedInController extends Controller
 
                 $this->setProfile($request);
 
-                $companyResponse=$this->setCompany($request['values'][0]['company']);
+                $companyResponse=$this->setCompany($request['company']);
 
-                $educationResponse=$this->setEducation($request['values'][1]['qualifications']);
+                $educationResponse=$this->setEducation($request['education']);
 
                 if($this->profile->save()&&$companyResponse&&$educationResponse)
                 {
@@ -349,9 +349,9 @@ class LinkedInController extends Controller
                     $education[$i]->delete();
                 }
 
-                $companyResponse=$this->setCompany($request['values'][0]['company']);
+                $companyResponse=$this->setCompany($request['company']);
 
-                $educationResponse=$this->setEducation($request['values'][1]['qualifications']);
+                $educationResponse=$this->setEducation($request['education']);
 
                 if($profileResponse&&$companyResponse&&$educationResponse)
                 {
