@@ -216,17 +216,16 @@ class LinkedInController extends Controller
 
     public function store(Request $request)
     { 
-        
         try
         {
             if(Cache::has('linkedin_Oauth_token'))
             {
                 $userIdExist=Profile::all()->where('user_id',\Auth::user()->id);
 
-                // if(!$userIdExist->isEmpty())
-                // {
-                //     return response()->json(['message'=>'Duplicate User ID','code'=>'404'],404)->header('Content-Type','application/json');
-                // }
+                if(!$userIdExist->isEmpty())
+                {
+                    return response()->json(['message'=>'Duplicate User ID','code'=>'403'],403)->header('Content-Type','application/json');
+                }
 
                 $data=$request->getContent();
                 // dd($request);
