@@ -60,15 +60,15 @@ class LinkedInController extends Controller
             $company=new Company;
 
             //storing the data into the company credentials
-            $company->company_name=$request[$i]['name'];
+            $company->company_name=$request[$i]['company_name'];
 
-            $company->company_address=$request[$i]['address'];
+            $company->company_address=$request[$i]['company_address'];
 
             $company->title=$request[$i]['title'];
 
-            $company->started_on=$request[$i]['start'];
+            $company->started_on=$request[$i]['started_on'];
 
-            $company->ended_on=$request[$i]['end'];
+            $company->ended_on=$request[$i]['ended_on'];
 
             $company->user_id=$this->profile->user_id;
 
@@ -88,7 +88,7 @@ class LinkedInController extends Controller
             $education=new Education;
 
             //set the values of education
-            $education->address_name=$request[$i]['address'];
+            $education->address_name=$request[$i]['address_name'];
 
             $education->qualification=$request[$i]['qualification'];
 
@@ -215,17 +215,17 @@ class LinkedInController extends Controller
     }
 
     public function store(Request $request)
-    { 
+    {       
         try
         {
             if(Cache::has('linkedin_Oauth_token'))
             {
                 $userIdExist=Profile::all()->where('user_id',\Auth::user()->id);
 
-                if(!$userIdExist->isEmpty())
-                {
-                    return response()->json(['message'=>'Duplicate User ID','code'=>'403'],403)->header('Content-Type','application/json');
-                }
+                // if(!$userIdExist->isEmpty())
+                // {
+                //     return response()->json(['message'=>'Duplicate User ID','code'=>'403'],403)->header('Content-Type','application/json');
+                // }
 
                 $data=$request->getContent();
                 // dd($request);
