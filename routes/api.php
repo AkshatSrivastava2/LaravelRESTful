@@ -26,6 +26,8 @@ Route::middleware('auth:api')->group(function() {
 
 	Route::post('profile/store','LinkedInController@store');
 
+	Route::get('profile/show','LinkedInController@show');
+
 	Route::get('profile/{id}/edit','LinkedInController@edit');
 
 	Route::post('profile/{id}/update','LinkedInController@update');

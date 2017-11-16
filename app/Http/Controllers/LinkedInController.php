@@ -222,10 +222,10 @@ class LinkedInController extends Controller
             {
                 $userIdExist=Profile::all()->where('user_id',\Auth::user()->id);
 
-                // if(!$userIdExist->isEmpty())
-                // {
-                //     return response()->json(['message'=>'Duplicate User ID','code'=>'403'],403)->header('Content-Type','application/json');
-                // }
+                if(!$userIdExist->isEmpty())
+                {
+                    return response()->json(['message'=>'Duplicate User ID','code'=>'403'],403)->header('Content-Type','application/json');
+                }
 
                 $data=$request->getContent();
                 // dd($request);
@@ -263,6 +263,31 @@ class LinkedInController extends Controller
                 return response()->json(['error'=>'Unauthorised To Use LinkedIn Endpoints', 'code'=>'401'], '401');               
             }
         }      
+    }
+    
+    public function show()
+    {
+
+        $this->profile=Profile::all()->where('user_id',\Auth::user()->id);
+
+        if($this->profile==null)
+        {
+            //returning the no data found message with status code 404
+            return response()->json(['message'=>'No Data Found','code'=>'404'],404)->header('Content-Type','application/json');
+        }
+        else
+        {
+            $company=Company::all()
+                ->where('user_id',\Auth::user()->id);
+
+            $education=Education::all()
+                ->where('user_id',\Auth::user()->id);
+
+            $basic=User::all()->where('id',\Auth::user()->id);
+
+            //returning the profile details with status code 200
+            return response()->json(['message'=>$this->profile,'basic'=>$basic,'company'=>$company,'education'=>$education],200)->header('Content-Type','application/json');
+        }
     }
 
     public function edit($id)
